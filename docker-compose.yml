@@ -1,0 +1,33 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:5.6
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    volumes:
+      - mydata:/var/lib/mysql
+  api:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+     - DATABASE_HOST=db
+     - PORT=$PORT
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "$PORT:$PORT"
+    command: bash -c "npm run dev"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "2"
+volumes:
+  mydata:
