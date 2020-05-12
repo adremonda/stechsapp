@@ -11,7 +11,7 @@ services:
       - mydata:/var/lib/mysql
   api:
     build: 
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
@@ -20,7 +20,7 @@ services:
      - DATABASE_HOST=db
      - PORT=$PORT
     volumes:
-      - ./backend:/usr/src/app
+      - ./server:/usr/src/app
     ports:
       - "$PORT:$PORT"
     command: bash -c "npm run dev"

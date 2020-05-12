@@ -1,3 +1,6 @@
+/**
+ * @param  {integer} modelsLengt
+ */
 const makeQueryString = (modelsLengt) => {
   let query = 'SELECT `vsi_vendor` as `vendor`, `vsi_model` as `name`, `vsi_swver` as `soft`, \
 `modem_macaddr` as `mac`, `ipaddr` as `ip` \
