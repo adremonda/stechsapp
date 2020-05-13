@@ -8,7 +8,10 @@ const cablemodem = require('./cablemodem.js');
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 app.get('/cablemodems', 
 [
   query('vendor').exists().withMessage('The vendor is required'),

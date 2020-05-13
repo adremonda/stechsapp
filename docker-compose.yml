@@ -26,10 +26,14 @@ services:
     ports:
       - "$PORT:$PORT"
     command: bash -c "./wait-for-it.sh db:3306 && npm run dev"
-  # front:
-  #   build: 
-  #     context: ./client
-  #     dockerfile: Dockerfile
+  front:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./client/src:/usr/share/nginx/html
 
 volumes:
   mydata:
