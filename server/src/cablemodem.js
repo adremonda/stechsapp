@@ -1,7 +1,7 @@
 const fs = require('fs');
 const chalk = require('chalk');
 
-const modelsPath = './models.json';
+const modelsPath = './data/models.json';
 
 const getModels = (path) => {
     return fs.readFileSync(path).toString();
