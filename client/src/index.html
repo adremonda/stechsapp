@@ -56,50 +56,51 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script type="text/javascript">
-    $( "#vendor" ).change(function() {
-      vendor = $( this ).val();
-      if (vendor != 0) {
-        getCablemodems(vendor);
+      apiUrl = 'http://localhost:8066/cablemodems';
+      $( "#vendor" ).change(function() {
+        vendor = $( this ).val();
+        if (vendor != 0) {
+          getCablemodems(vendor);
+        }
+      });
+      $( "#vendor_refresh" ).click(function() {
+        vendor = $( '#vendor' ).val();
+        if (vendor != 0) {
+          getCablemodems(vendor);
+        }
+      });
+
+      getCablemodems = (vendor) => {
+        $.ajax( apiUrl + "?vendor=" + vendor )
+        .done(function(response) {
+          console.log(response);
+          models = response.data;
+          clearTable();
+          $.each(models, makeTable);
+        })
+        .fail(function() {
+          alert( "error" );
+        })
       }
-    });
-    $( "#vendor_refresh" ).click(function() {
-      vendor = $( '#vendor' ).val();
-      if (vendor != 0) {
-        getCablemodems(vendor);
+
+
+      clearTable = () => {
+        $("#models > tr").remove();
       }
-    });
 
-    getCablemodems = (vendor) => {
-      $.ajax( "http://localhost:8066/cablemodems?vendor=" + vendor )
-      .done(function(response) {
-        console.log(response);
-        models = response.data;
-        clearTable();
-        $.each(models, makeTable);
-      })
-      .fail(function() {
-        alert( "error" );
-      })
-    }
-
-
-    clearTable = () => {
-      $("#models > tr").remove();
-    }
-
-    makeTable = (i, model) => {
-      var btn= $('<input class="btn btn-primary" type="button" value="guardar en json" title="Accion para guardar el modelo seleccionado dentro de models.json"/>')
-      btn.click(function() {
-        $.post('http://localhost:8066/cablemodems', model, () => {console.log('success')})
-      })
-      var $tr = $('<tr>').append(
-        $('<td>').text(i+1),
-        $('<td>').text(model.name),
-        $('<td>').text(model.soft),
-        $('<td>').text(model.mac),
-        $('<td>').append(btn)
-      ).appendTo('#models');
-    }
+      makeTable = (i, model) => {
+        var btn= $('<input class="btn btn-primary" type="button" value="guardar en json" title="Accion para guardar el modelo seleccionado dentro de models.json"/>')
+        btn.click(function() {
+          $.post(apiUrl, model, () => {console.log('success')})
+        })
+        var $tr = $('<tr>').append(
+          $('<td>').text(i+1),
+          $('<td>').text(model.name),
+          $('<td>').text(model.soft),
+          $('<td>').text(model.mac),
+          $('<td>').append(btn)
+        ).appendTo('#models');
+      }
     </script>
   </body>
 </html>
