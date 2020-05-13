@@ -13,6 +13,8 @@ services:
     build: 
       context: ./server
       dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
     restart: unless-stopped
     depends_on:
       - db
@@ -23,11 +25,11 @@ services:
       - ./server:/usr/src/app
     ports:
       - "$PORT:$PORT"
-    command: bash -c "npm run dev"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "25m"
-        max-file: "2"
+    command: bash -c "./wait-for-it.sh db:3306 && npm run dev"
+  # front:
+  #   build: 
+  #     context: ./client
+  #     dockerfile: Dockerfile
+
 volumes:
   mydata:
