@@ -56,7 +56,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script type="text/javascript">
-      apiUrl = 'http://localhost:8066/cablemodems';
+      apiUrl = 'http://localhost:8000/cablemodems';
       $( "#vendor" ).change(function() {
         vendor = $( this ).val();
         if (vendor != 0) {
@@ -91,7 +91,10 @@
       makeTable = (i, model) => {
         var btn= $('<input class="btn btn-primary" type="button" value="guardar en json" title="Accion para guardar el modelo seleccionado dentro de models.json"/>')
         btn.click(function() {
-          $.post(apiUrl, model, () => {console.log('success')})
+          $.post(apiUrl, model, () => {
+            console.log('success');
+            alert('modelo guardado en models.json')
+          })
         })
         var $tr = $('<tr>').append(
           $('<td>').text(i+1),

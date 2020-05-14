@@ -11,4 +11,4 @@ RUN npm install
 
 COPY . .
 
-EXPOSE ${PORT}
+EXPOSE 8080
