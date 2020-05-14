@@ -1,3 +1,0 @@
-export MYSQL_ROOT_PASSWORD=dbpass
-export SERVER_PORT=8000
-export CLIENT_PORT=3000

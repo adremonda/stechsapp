@@ -14,7 +14,7 @@ Pasos arrancar el sistema ejecutar (Necesitas docker y docker-compose).
 `docker-compose up`
 
 <br />
-El front corre en localhost:8080.  
-El back corre en localhost:8066. 
+El front corre en localhost:3000.  
+El back corre en localhost:8000. 
 
 <br/>
