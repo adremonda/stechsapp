@@ -34,6 +34,8 @@ services:
       - "3000:80"
     volumes:
       - ./client/src:/usr/share/nginx/html
+    environment:
+      API_URL: 'http://localhost:8000'
 
 volumes:
   mydata:

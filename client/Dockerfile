@@ -1,2 +1,3 @@
-FROM nginx:alpine
-COPY ./src/* /usr/share/nginx/html
+FROM php:7.2-apache
+COPY src/ /var/www/html
+EXPOSE 80

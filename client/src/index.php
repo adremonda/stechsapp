@@ -52,58 +52,9 @@
       crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script type="text/javascript">
-      apiUrl = 'http://localhost:8000/cablemodems';
-      $( "#vendor" ).change(function() {
-        vendor = $( this ).val();
-        if (vendor != 0) {
-          getCablemodems(vendor);
-        }
-      });
-      $( "#vendor_refresh" ).click(function() {
-        vendor = $( '#vendor' ).val();
-        if (vendor != 0) {
-          getCablemodems(vendor);
-        }
-      });
-
-      getCablemodems = (vendor) => {
-        $.ajax( apiUrl + "?vendor=" + vendor )
-        .done(function(response) {
-          console.log(response);
-          models = response.data;
-          clearTable();
-          $.each(models, makeTable);
-        })
-        .fail(function() {
-          alert( "error" );
-        })
-      }
-
-
-      clearTable = () => {
-        $("#models > tr").remove();
-      }
-
-      makeTable = (i, model) => {
-        var btn= $('<input class="btn btn-primary" type="button" value="guardar en json" title="Accion para guardar el modelo seleccionado dentro de models.json"/>')
-        btn.click(function() {
-          $.post(apiUrl, model, () => {
-            console.log('success');
-            alert('modelo guardado en models.json')
-          })
-        })
-        var $tr = $('<tr>').append(
-          $('<td>').text(i+1),
-          $('<td>').text(model.name),
-          $('<td>').text(model.soft),
-          $('<td>').text(model.mac),
-          $('<td>').append(btn)
-        ).appendTo('#models');
-      }
+      var apiUrl = <?php echo $_SERVER["API_URL"]; ?>;
     </script>
+    <script type="text/javascript" src="/js/app.js"></script>
   </body>
 </html>
