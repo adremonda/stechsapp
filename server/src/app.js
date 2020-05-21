@@ -1,10 +1,9 @@
 const express = require('express');
 const { check, query, validationResult } = require('express-validator');
 const bodyParser = require('body-parser');
-const { connection } = require('./db.js');
-const { makeQueryString } = require('./utils.js');
-const cablemodem = require('./cablemodem.js');
-
+const {Cablemodem, Sequelize} = require('./models');
+const cablemodem = require('./utils/cablemodem.js');
+const Op = Sequelize.Op;
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -16,30 +15,32 @@ app.get('/cablemodems',
 [
   query('vendor').exists().withMessage('The vendor is required'),
 ],
-async (req, res) => {
+(req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
     return res.status(422).json({ errors: errors.array() });
 
-  let query_params=[req.query.vendor];
+  const _vendor = req.query.vendor;
   try {
     const _cablemodems = cablemodem.loadModels();
+    let where = {vendor: _vendor};
     //buscamos vendor sin incluir cablemodems
-    const [vendors] = await connection.promise().execute(
-      makeQueryString(), query_params
-    );
-    if (!vendors.length) // si no encontramos, avisamos que no hay vendor
-      return res.status(404).send({ message: 'Vendor not found' });
-
+    Cablemodem.findOne( {
+      where: where
+    }).then( vendor => {
+      if (!vendor) // si no encontramos, avisamos que no hay vendor
+        return res.status(404).send({ message: 'Vendor not found' });
+    })
+    where[Op.and] = [];
     for (let model of _cablemodems) {
-      query_params.push(model.name)
-      query_params.push(model.soft)
+      where[Op.and].push({[Op.or]: [{name: {[Op.ne]: model.name}}, {soft: {[Op.ne]: model.soft}}]})
     }
-
-    const [modems] = await connection.promise().execute(
-      makeQueryString(_cablemodems.length), query_params
-    );
-    return res.status(200).send({ data: modems, message: 'OK' });
+    Cablemodem.findAll( {
+      where: where,
+      group: ['vendor', 'name', 'soft', 'mac']
+    }).then( modems => {
+      return res.status(200).send({ data: modems, message: 'OK' });
+    })
   }
   catch (err) {
     console.log(err);
@@ -53,7 +54,7 @@ app.post('/cablemodems',
   check('name').exists().bail().isString(),
   check('soft').exists().bail().isString()
 ],
-async (req, res) => {
+(req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
     return res.status(422).json({ errors: errors.array() });
